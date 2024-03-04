@@ -1,20 +1,41 @@
 from telethon.sync import TelegramClient
 from telethon.tl.functions.messages import GetHistoryRequest
 from telethon.tl.types import InputMessagesFilterVideo
+from telethon.tl import types
 import os
-
-# Meminta input dari pengguna
-api_id = input('Masukkan API ID: ')
-api_hash = input('Masukkan API Hash: ')
-phone_number = input('Masukkan nomor telepon: ')
-group_username = input('Masukkan username grup: ')
-download_path = input('Masukkan path untuk menyimpan video (kosongkan untuk path default): ') or 'videos/'
-limit = int(input('Masukkan jumlah pesan yang ingin diambil: '))
+import sys
+import time
 
 # Inisialisasi client Telegram
-client = TelegramClient('session_name', api_id, api_hash)
+client = TelegramClient('session_name', None, None)
 
 def download_videos():
+    # Menampilkan tulisan "Loading..." dengan animasi titik-titik
+    sys.stdout.write("Connecting to Telegram server ")
+    sys.stdout.flush()
+    while not client.is_connected():
+        for _ in range(3):
+            sys.stdout.write(".")
+            sys.stdout.flush()
+            time.sleep(0.5)
+        sys.stdout.write("\b\b\b   \b\b\b")
+        sys.stdout.flush()
+
+    # Menghubungkan ke server Telegram
+    client.connect()
+    print("\nConnected to Telegram server")
+
+    # Meminta input dari pengguna
+    api_id = input('Masukkan API ID: ')
+    api_hash = input('Masukkan API Hash: ')
+    phone_number = input('Masukkan nomor telepon: ')
+    group_username = input('Masukkan username grup: ')
+    download_path = input('Masukkan path untuk menyimpan video (kosongkan untuk path default): ') or 'videos/'
+    limit = int(input('Masukkan jumlah pesan yang ingin diambil: '))
+
+    # Inisialisasi client Telegram
+    client = TelegramClient('session_name', api_id, api_hash)
+
     # Menghubungkan ke server Telegram
     client.connect()
 
