@@ -6,7 +6,7 @@ import os
 # Inisialisasi client Telegram
 client = TelegramClient('session_name', None, None)
 
-def download_videos(api_id, api_hash, phone_number, group_username, download_path):
+def download_videos(api_id, api_hash, phone_number, group_username, download_path, limit):
     # Menghubungkan ke server Telegram
     client.connect()
 
@@ -19,7 +19,7 @@ def download_videos(api_id, api_hash, phone_number, group_username, download_pat
     entity = client.get_entity(group_username)
     messages = client(GetHistoryRequest(
         peer=entity,
-        limit=0,  # Mengambil semua pesan
+        limit=limit,  # Mengambil jumlah pesan sesuai limit
         offset_date=None,
         offset_id=0,
         max_id=0,
@@ -27,7 +27,7 @@ def download_videos(api_id, api_hash, phone_number, group_username, download_pat
         add_offset=0,
         hash=0,
         offset_peer=entity,
-        limit=0  # Mengambil semua pesan
+        limit=limit  # Mengambil jumlah pesan sesuai limit
     ))
 
     # Membuat direktori jika belum ada
@@ -41,12 +41,14 @@ def download_videos(api_id, api_hash, phone_number, group_username, download_pat
             video_path = client.download_media(video, download_path)
             print(f"Video {video.id} diunduh ke: {video_path}")
 
-# Menjalankan fungsi download_videos setelah mengambil input API ID, API Hash, nomor telepon, dan path
+# Meminta input dari pengguna
+api_id = input('Masukkan API ID: ')
+api_hash = input('Masukkan API Hash: ')
+phone_number = input('Masukkan nomor telepon: ')
+group_username = input('Masukkan username grup: ')
+download_path = input('Masukkan path untuk menyimpan video (kosongkan untuk path default): ') or 'videos/'
+limit = int(input('Masukkan jumlah pesan yang ingin diambil: '))
+
+# Menjalankan fungsi download_videos
 if __name__ == '__main__':
-    api_id = input('Masukkan API ID: ')
-    api_hash = input('Masukkan API Hash: ')
-    phone_number = input('Masukkan nomor telepon: ')
-    group_username = input('Masukkan username grup: ')
-    download_path = input('Masukkan path untuk menyimpan video (kosongkan untuk path default): ') or 'videos/'
-    download_videos(api_id, api_hash, phone_number, group_username, download_path)
-    
+    download_videos(api_id, api_hash, phone_number, group_username, download_path, limit)
