@@ -26,8 +26,7 @@ def download_videos(api_id, api_hash, phone_number, group_username, download_pat
         min_id=0,
         add_offset=0,
         hash=0,
-        offset_peer=entity,
-        limit=limit  # Mengambil jumlah pesan sesuai limit
+        offset_peer=entity
     ))
 
     # Membuat direktori jika belum ada
@@ -52,3 +51,4 @@ limit = int(input('Masukkan jumlah pesan yang ingin diambil: '))
 # Menjalankan fungsi download_videos
 if __name__ == '__main__':
     download_videos(api_id, api_hash, phone_number, group_username, download_path, limit)
+    
