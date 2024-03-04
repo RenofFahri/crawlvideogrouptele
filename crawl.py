@@ -6,8 +6,16 @@ import os
 import sys
 import time
 
+# Meminta input dari pengguna
+api_id = input('Masukkan API ID: ')
+api_hash = input('Masukkan API Hash: ')
+phone_number = input('Masukkan nomor telepon: ')
+group_username = input('Masukkan username grup: ')
+download_path = input('Masukkan path untuk menyimpan video (kosongkan untuk path default): ') or 'videos/'
+limit = int(input('Masukkan jumlah pesan yang ingin diambil: '))
+
 # Inisialisasi client Telegram
-client = TelegramClient('session_name', None, None)
+client = TelegramClient('session_name', api_id, api_hash)
 
 def download_videos():
     # Menampilkan tulisan "Loading..." dengan animasi titik-titik
@@ -24,20 +32,6 @@ def download_videos():
     # Menghubungkan ke server Telegram
     client.connect()
     print("\nConnected to Telegram server")
-
-    # Meminta input dari pengguna
-    api_id = input('Masukkan API ID: ')
-    api_hash = input('Masukkan API Hash: ')
-    phone_number = input('Masukkan nomor telepon: ')
-    group_username = input('Masukkan username grup: ')
-    download_path = input('Masukkan path untuk menyimpan video (kosongkan untuk path default): ') or 'videos/'
-    limit = int(input('Masukkan jumlah pesan yang ingin diambil: '))
-
-    # Inisialisasi client Telegram
-    client = TelegramClient('session_name', api_id, api_hash)
-
-    # Menghubungkan ke server Telegram
-    client.connect()
 
     # Mendapatkan nomor telepon dari pengguna
     if not client.is_user_authorized():
@@ -72,4 +66,3 @@ def download_videos():
 # Menjalankan fungsi download_videos
 if __name__ == '__main__':
     download_videos()
-    
