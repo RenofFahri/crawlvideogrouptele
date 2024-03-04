@@ -1,0 +1,2 @@
+# crawlvideogrouptele
+pip install telethon
