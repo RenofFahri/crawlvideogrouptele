@@ -1,26 +1,52 @@
 from telethon.sync import TelegramClient
+from telethon.tl.functions.messages import GetHistoryRequest
 from telethon.tl.types import InputMessagesFilterVideo
+import os
 
-# Replace these with your own API ID, API HASH, and phone number
-api_id = 'your_api_id'
-api_hash = 'your_api_hash'
-phone_number = 'your_phone_number'
+# Inisialisasi client Telegram
+client = TelegramClient('session_name', None, None)
 
-with TelegramClient('session_name', api_id, api_hash) as client:
+def download_videos(api_id, api_hash, phone_number, group_username, download_path):
+    # Menghubungkan ke server Telegram
     client.connect()
 
-    # Ensure you're authorized
+    # Mendapatkan nomor telepon dari pengguna
     if not client.is_user_authorized():
         client.send_code_request(phone_number)
-        client.sign_in(phone_number, input('Enter the code: '))
+        client.sign_in(phone_number, input('Masukkan kode yang dikirim ke Telegram: '))
 
-    # Replace 'group_username' with the username of the group you want to crawl
-    group_entity = client.get_entity('group_username')
+    # Mengambil semua pesan yang mengandung video dari grup
+    entity = client.get_entity(group_username)
+    messages = client(GetHistoryRequest(
+        peer=entity,
+        limit=0,  # Mengambil semua pesan
+        offset_date=None,
+        offset_id=0,
+        max_id=0,
+        min_id=0,
+        add_offset=0,
+        hash=0,
+        offset_peer=entity,
+        limit=0  # Mengambil semua pesan
+    ))
 
-    # Get the messages in the group that contain videos
-    videos = client.get_messages(group_entity, filter=InputMessagesFilterVideo)
+    # Membuat direktori jika belum ada
+    if not os.path.exists(download_path):
+        os.makedirs(download_path)
 
-    # Download each video
-    for video in videos:
-      client.download_media(video)
-      
+    # Mengambil video dari setiap pesan
+    for message in messages.messages:
+        if message.media and isinstance(message.media, types.MessageMediaVideo):
+            video = message.media.video
+            video_path = client.download_media(video, download_path)
+            print(f"Video {video.id} diunduh ke: {video_path}")
+
+# Menjalankan fungsi download_videos setelah mengambil input API ID, API Hash, nomor telepon, dan path
+if __name__ == '__main__':
+    api_id = input('Masukkan API ID: ')
+    api_hash = input('Masukkan API Hash: ')
+    phone_number = input('Masukkan nomor telepon: ')
+    group_username = input('Masukkan username grup: ')
+    download_path = input('Masukkan path untuk menyimpan video (kosongkan untuk path default): ') or 'videos/'
+    download_videos(api_id, api_hash, phone_number, group_username, download_path)
+    
