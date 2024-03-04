@@ -3,10 +3,18 @@ from telethon.tl.functions.messages import GetHistoryRequest
 from telethon.tl.types import InputMessagesFilterVideo
 import os
 
-# Inisialisasi client Telegram
-client = TelegramClient('session_name', None, None)
+# Meminta input dari pengguna
+api_id = input('Masukkan API ID: ')
+api_hash = input('Masukkan API Hash: ')
+phone_number = input('Masukkan nomor telepon: ')
+group_username = input('Masukkan username grup: ')
+download_path = input('Masukkan path untuk menyimpan video (kosongkan untuk path default): ') or 'videos/'
+limit = int(input('Masukkan jumlah pesan yang ingin diambil: '))
 
-def download_videos(api_id, api_hash, phone_number, group_username, download_path, limit):
+# Inisialisasi client Telegram
+client = TelegramClient('session_name', api_id, api_hash)
+
+def download_videos():
     # Menghubungkan ke server Telegram
     client.connect()
 
@@ -40,15 +48,7 @@ def download_videos(api_id, api_hash, phone_number, group_username, download_pat
             video_path = client.download_media(video, download_path)
             print(f"Video {video.id} diunduh ke: {video_path}")
 
-# Meminta input dari pengguna
-api_id = input('Masukkan API ID: ')
-api_hash = input('Masukkan API Hash: ')
-phone_number = input('Masukkan nomor telepon: ')
-group_username = input('Masukkan username grup: ')
-download_path = input('Masukkan path untuk menyimpan video (kosongkan untuk path default): ') or 'videos/'
-limit = int(input('Masukkan jumlah pesan yang ingin diambil: '))
-
 # Menjalankan fungsi download_videos
 if __name__ == '__main__':
-    download_videos(api_id, api_hash, phone_number, group_username, download_path, limit)
+    download_videos()
     
