@@ -3,8 +3,6 @@ from telethon.tl.functions.messages import GetHistoryRequest
 from telethon.tl.types import InputMessagesFilterVideo
 from telethon.tl import types
 import os
-import sys
-import time
 
 # Meminta input dari pengguna
 api_id = input('Masukkan API ID: ')
@@ -18,20 +16,8 @@ limit = int(input('Masukkan jumlah pesan yang ingin diambil: '))
 client = TelegramClient('session_name', api_id, api_hash)
 
 def download_videos():
-    # Menampilkan tulisan "Loading..." dengan animasi titik-titik
-    sys.stdout.write("Connecting to Telegram server ")
-    sys.stdout.flush()
-    while not client.is_connected():
-        for _ in range(3):
-            sys.stdout.write(".")
-            sys.stdout.flush()
-            time.sleep(0.5)
-        sys.stdout.write("\b\b\b   \b\b\b")
-        sys.stdout.flush()
-
     # Menghubungkan ke server Telegram
     client.connect()
-    print("\nConnected to Telegram server")
 
     # Mendapatkan nomor telepon dari pengguna
     if not client.is_user_authorized():
@@ -66,3 +52,4 @@ def download_videos():
 # Menjalankan fungsi download_videos
 if __name__ == '__main__':
     download_videos()
+    
